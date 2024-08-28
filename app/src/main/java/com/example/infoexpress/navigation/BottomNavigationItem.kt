@@ -1,9 +1,9 @@
 package com.example.infoexpress.navigation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.infoexpress.ui.Screens
 
@@ -19,7 +19,7 @@ sealed class BottomNavigationItem(
     )
     data object Saved : BottomNavigationItem(
         label = "Saved",
-        icon = Icons.Filled.Star,
+        icon = Icons.Filled.Favorite,
         route = Screens.Saved.route
     )
     data object Search : BottomNavigationItem(
