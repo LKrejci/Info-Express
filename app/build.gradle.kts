@@ -50,6 +50,9 @@ android {
 }
 
 dependencies {
+    //Coil
+    implementation(libs.coil.compose)
+
     //Navigation Jetpack
     implementation (libs.androidx.navigation.compose)
 
