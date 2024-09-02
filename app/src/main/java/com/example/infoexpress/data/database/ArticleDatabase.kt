@@ -11,6 +11,6 @@ import com.example.infoexpress.data.database.entity.Article
 )
 abstract class ArticleDatabase: RoomDatabase() {
 
-    abstract val dao: ArticleDao
+    abstract val articleDao: ArticleDao
 
 }

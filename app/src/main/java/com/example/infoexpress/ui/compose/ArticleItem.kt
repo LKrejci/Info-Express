@@ -63,17 +63,15 @@ fun ArticleItem(article: Article) {
             modifier = Modifier
                 .height(180.dp)
         ) {
-            article.image?.let {
-                ArticleImage(image = it, title = article.title!!)
-            }
+            ArticleImage(image = article.image, title = article.title)
         }
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
         ) {
-            article.title?.let { ArticleTitle(title = it) }
+            ArticleTitle(title = article.title)
             if (expanded) {
-                article.description?.let { ArticleDescription(description = it) }
+                ArticleDescription(description = article.description)
             }
         }
     }
