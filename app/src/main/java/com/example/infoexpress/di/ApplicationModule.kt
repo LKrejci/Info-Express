@@ -1,7 +1,8 @@
-package com.example.infoexpress.data.database
+package com.example.infoexpress.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.infoexpress.data.database.ArticleDatabase
 import com.example.infoexpress.data.database.dao.ArticleDao
 import dagger.Module
 import dagger.Provides
@@ -12,14 +13,13 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object RoomModule {
+object ApplicationModule {
 
     @Provides
     @Singleton
     fun provideUserDatabase(@ApplicationContext context: Context): ArticleDatabase {
         return Room.databaseBuilder(context, ArticleDatabase::class.java, "article-database").build()
     }
-
 
     @Provides
     @Singleton

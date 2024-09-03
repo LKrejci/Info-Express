@@ -34,11 +34,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.infoexpress.data.database.entity.Article
+import com.example.infoexpress.ui.domain.UIEvent
+import com.example.infoexpress.viewModel.ArticleViewModel
 
 @Composable
-fun ArticleItem(article: Article) {
+fun ArticleItem(
+    article: Article
+) {
+    val articleViewModel: ArticleViewModel = hiltViewModel()
     var expanded by remember {
         mutableStateOf(false)
     }
@@ -63,24 +69,29 @@ fun ArticleItem(article: Article) {
             modifier = Modifier
                 .height(180.dp)
         ) {
-            ArticleImage(image = article.image, title = article.title)
+            ArticleImage(articleViewModel, image = article.image, title = article.title)
         }
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
         ) {
-            ArticleTitle(title = article.title)
+            ArticleTitle(articleViewModel, title = article.title)
             if (expanded) {
-                ArticleDescription(description = article.description)
+                ArticleDescription(articleViewModel, description = article.description)
             }
         }
     }
 }
 
 @Composable
-fun ArticleImage(image: String, title: String) {
+fun ArticleImage(
+    articleViewModel: ArticleViewModel,
+    image: String,
+    title: String
+) {
     var isSaved by remember { mutableStateOf(false) }
     Box(contentAlignment = Alignment.TopEnd) {
+        articleViewModel.onEvent(UIEvent.ImageChanged(image))
         AsyncImage(
             model = image,
             contentDescription = title,
@@ -99,7 +110,10 @@ fun ArticleImage(image: String, title: String) {
                     }
                 }
         )
-        IconButton(onClick = { isSaved = !isSaved }) {
+        IconButton(onClick = {
+            isSaved = !isSaved
+            articleViewModel.onEvent(UIEvent.SaveIconChanged(isSaved))
+        }) {
             Icon(
                 imageVector = if (isSaved) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
                 contentDescription = "Save News",
@@ -110,11 +124,17 @@ fun ArticleImage(image: String, title: String) {
 }
 
 @Composable
-fun ArticleTitle(title: String) {
+fun ArticleTitle(
+    articleViewModel: ArticleViewModel,
+    title: String
+) {
     Text(
         text = title,
         // 3 lines for tests purpose
         maxLines = 3,
+        onTextLayout = {
+            articleViewModel.onEvent(UIEvent.TitleChanged(title))
+        },
         overflow = TextOverflow.Ellipsis,
         modifier = Modifier.padding(8.dp),
         style = MaterialTheme.typography.titleLarge,
@@ -122,10 +142,16 @@ fun ArticleTitle(title: String) {
 }
 
 @Composable
-fun ArticleDescription(description: String) {
+fun ArticleDescription(
+    articleViewModel: ArticleViewModel,
+    description: String
+) {
     Text(
         text = description,
         overflow = TextOverflow.Ellipsis,
+        onTextLayout = {
+            articleViewModel.onEvent(UIEvent.TitleChanged(description))
+        },
         modifier = Modifier.padding(8.dp),
         style = MaterialTheme.typography.titleSmall
     )
