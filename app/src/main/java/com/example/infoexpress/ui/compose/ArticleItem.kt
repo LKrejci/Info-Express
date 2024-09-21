@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.infoexpress.data.database.entity.Article
-import com.example.infoexpress.ui.domain.UIEvent
 import com.example.infoexpress.viewModel.ArticleViewModel
 
 @Composable
@@ -45,9 +44,10 @@ fun ArticleItem(
     article: Article
 ) {
     val articleViewModel: ArticleViewModel = hiltViewModel()
-    var expanded by remember {
-        mutableStateOf(false)
-    }
+    var expanded by remember { mutableStateOf(false) }
+    var isSaved by remember { mutableStateOf(false) }
+    isSaved = article.isFavorite
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -69,15 +69,27 @@ fun ArticleItem(
             modifier = Modifier
                 .height(180.dp)
         ) {
-            ArticleImage(articleViewModel, image = article.image, title = article.title)
+            Box(contentAlignment = Alignment.TopEnd) {
+                ArticleImage(image = article.image, title = article.title)
+                IconButton(onClick = {
+                    isSaved = !isSaved
+                    articleViewModel.shouldSaveArticle(isSaved, article)
+                }) {
+                    Icon(
+                        imageVector = if (isSaved) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
+                        contentDescription = "Save News",
+                        tint = if (isSaved) Color.Red else Color.DarkGray
+                    )
+                }
+            }
         }
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
         ) {
-            ArticleTitle(articleViewModel, title = article.title)
+            ArticleTitle(title = article.title)
             if (expanded) {
-                ArticleDescription(articleViewModel, description = article.description)
+                ArticleDescription(description = article.description)
             }
         }
     }
@@ -85,56 +97,36 @@ fun ArticleItem(
 
 @Composable
 fun ArticleImage(
-    articleViewModel: ArticleViewModel,
     image: String,
     title: String
 ) {
-    var isSaved by remember { mutableStateOf(false) }
-    Box(contentAlignment = Alignment.TopEnd) {
-        articleViewModel.onEvent(UIEvent.ImageChanged(image))
-        AsyncImage(
-            model = image,
-            contentDescription = title,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxSize()
-                .drawWithCache {
-                    val gradient = Brush.verticalGradient(
-                        colors = listOf(Color.Transparent, Color.Black),
-                        startY = size.height / 2,
-                        endY = size.height
-                    )
-                    onDrawWithContent {
-                        drawContent()
-                        drawRect(gradient, blendMode = BlendMode.Multiply)
-                    }
+    AsyncImage(
+        model = image,
+        contentDescription = title,
+        contentScale = ContentScale.Crop,
+        modifier = Modifier
+            .fillMaxSize()
+            .drawWithCache {
+                val gradient = Brush.verticalGradient(
+                    colors = listOf(Color.Transparent, Color.Black),
+                    startY = size.height / 2,
+                    endY = size.height
+                )
+                onDrawWithContent {
+                    drawContent()
+                    drawRect(gradient, blendMode = BlendMode.Multiply)
                 }
-        )
-        IconButton(onClick = {
-            isSaved = !isSaved
-            articleViewModel.onEvent(UIEvent.SaveIconChanged(isSaved))
-        }) {
-            Icon(
-                imageVector = if (isSaved) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
-                contentDescription = "Save News",
-                tint = if (isSaved) Color.Red else Color.DarkGray
-            )
-        }
-    }
+            }
+    )
 }
 
 @Composable
 fun ArticleTitle(
-    articleViewModel: ArticleViewModel,
     title: String
 ) {
     Text(
         text = title,
-        // 3 lines for tests purpose
         maxLines = 3,
-        onTextLayout = {
-            articleViewModel.onEvent(UIEvent.TitleChanged(title))
-        },
         overflow = TextOverflow.Ellipsis,
         modifier = Modifier.padding(8.dp),
         style = MaterialTheme.typography.titleLarge,
@@ -143,15 +135,11 @@ fun ArticleTitle(
 
 @Composable
 fun ArticleDescription(
-    articleViewModel: ArticleViewModel,
     description: String
 ) {
     Text(
         text = description,
         overflow = TextOverflow.Ellipsis,
-        onTextLayout = {
-            articleViewModel.onEvent(UIEvent.TitleChanged(description))
-        },
         modifier = Modifier.padding(8.dp),
         style = MaterialTheme.typography.titleSmall
     )

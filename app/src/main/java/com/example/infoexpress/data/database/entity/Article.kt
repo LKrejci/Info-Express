@@ -16,6 +16,8 @@ data class Article(
     @ColumnInfo("urlToImage")
     val image: String,
 
+    var isFavorite: Boolean = false,
+
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo("id")
     var id: Int = 0,

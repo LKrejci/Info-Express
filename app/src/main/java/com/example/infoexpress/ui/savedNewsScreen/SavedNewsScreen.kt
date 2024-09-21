@@ -11,15 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.infoexpress.ui.compose.NewsLayout
-import com.example.infoexpress.ui.domain.UIEvent
 import com.example.infoexpress.ui.theme.InfoExpressTheme
 import com.example.infoexpress.viewModel.ArticleViewModel
 
 @Composable
 fun SavedNewsScreen() {
     val articleViewModel: ArticleViewModel = hiltViewModel()
-    articleViewModel.onEvent(UIEvent.GetNews)
-    val newsList = articleViewModel.article.value
 
     InfoExpressTheme {
         Surface {
@@ -28,7 +25,7 @@ fun SavedNewsScreen() {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                NewsLayout(newsList)
+                NewsLayout(articleViewModel, false)
             }
         }
     }
