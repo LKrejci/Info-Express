@@ -4,6 +4,10 @@ import android.content.Context
 import androidx.room.Room
 import com.example.infoexpress.data.database.ArticleDatabase
 import com.example.infoexpress.data.database.dao.ArticleDao
+import com.example.infoexpress.data.database.local.LocalDataSource
+import com.example.infoexpress.data.database.remote.RemoteDataSource
+import com.example.infoexpress.data.database.repository.Repository
+import com.example.infoexpress.data.database.repository.RepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,4 +30,11 @@ object ApplicationModule {
     fun provideArticleDao(articleDatabase: ArticleDatabase): ArticleDao {
         return articleDatabase.articleDao
     }
+
+    @Provides
+    @Singleton
+    fun provideRepository(
+        localDataSource: LocalDataSource,
+        remoteDataSource: RemoteDataSource
+    ): Repository = RepositoryImpl(localDataSource, remoteDataSource)
 }
