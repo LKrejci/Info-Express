@@ -1,6 +1,6 @@
-package com.example.infoexpress.data.database.remote
+package com.example.infoexpress.data.remote
 
-import com.example.infoexpress.data.database.entity.Article
+import com.example.infoexpress.data.entity.Article
 import kotlinx.coroutines.flow.Flow
 
 class RemoteDataSourceImpl : RemoteDataSource {

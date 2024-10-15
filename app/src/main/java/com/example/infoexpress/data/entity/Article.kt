@@ -1,4 +1,4 @@
-package com.example.infoexpress.data.database.entity
+package com.example.infoexpress.data.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

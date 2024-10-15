@@ -36,7 +36,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.example.infoexpress.data.database.entity.Article
+import com.example.infoexpress.data.entity.Article
 import com.example.infoexpress.viewModel.ArticleViewModel
 
 @Composable

@@ -5,7 +5,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.infoexpress.data.database.entity.Article
+import com.example.infoexpress.data.entity.Article
 import com.example.infoexpress.viewModel.ArticleViewModel
 
 @Composable

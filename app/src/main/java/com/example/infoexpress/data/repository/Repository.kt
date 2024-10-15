@@ -1,6 +1,6 @@
-package com.example.infoexpress.data.database.repository
+package com.example.infoexpress.data.repository
 
-import com.example.infoexpress.data.database.entity.Article
+import com.example.infoexpress.data.entity.Article
 import kotlinx.coroutines.flow.Flow
 
 

@@ -2,12 +2,14 @@ package com.example.infoexpress.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.infoexpress.data.database.ArticleDatabase
-import com.example.infoexpress.data.database.dao.ArticleDao
-import com.example.infoexpress.data.database.local.LocalDataSource
-import com.example.infoexpress.data.database.remote.RemoteDataSource
-import com.example.infoexpress.data.database.repository.Repository
-import com.example.infoexpress.data.database.repository.RepositoryImpl
+import com.example.infoexpress.data.ArticleDatabase
+import com.example.infoexpress.data.dao.ArticleDao
+import com.example.infoexpress.data.local.LocalDataSource
+import com.example.infoexpress.data.local.LocalDataSourceImpl
+import com.example.infoexpress.data.remote.RemoteDataSource
+import com.example.infoexpress.data.remote.RemoteDataSourceImpl
+import com.example.infoexpress.data.repository.Repository
+import com.example.infoexpress.data.repository.RepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,6 +31,16 @@ object ApplicationModule {
     @Singleton
     fun provideArticleDao(articleDatabase: ArticleDatabase): ArticleDao {
         return articleDatabase.articleDao
+    }
+
+    @Provides
+    fun provideLocalDataSource(articleDao: ArticleDao): LocalDataSource {
+        return LocalDataSourceImpl(articleDao)
+    }
+
+    @Provides
+    fun provideRemoteDataSource(): RemoteDataSource {
+        return RemoteDataSourceImpl()
     }
 
     @Provides

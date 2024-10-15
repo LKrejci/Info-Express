@@ -2,8 +2,8 @@ package com.example.infoexpress.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.infoexpress.data.database.repository.Repository
-import com.example.infoexpress.data.database.entity.Article
+import com.example.infoexpress.data.repository.Repository
+import com.example.infoexpress.data.entity.Article
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
