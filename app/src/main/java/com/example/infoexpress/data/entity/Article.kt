@@ -8,10 +8,10 @@ import androidx.room.PrimaryKey
 data class Article(
 
     @ColumnInfo("title")
-    val title: String,
+    var title: String,
 
     @ColumnInfo("description")
-    val description: String,
+    var description: String,
 
     @ColumnInfo("urlToImage")
     val image: String,

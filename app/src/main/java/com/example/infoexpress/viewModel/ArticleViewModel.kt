@@ -4,6 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.infoexpress.data.repository.Repository
 import com.example.infoexpress.data.entity.Article
+import com.google.mlkit.common.model.DownloadConditions
+import com.google.mlkit.nl.translate.Translation
+import com.google.mlkit.nl.translate.TranslatorOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +20,8 @@ import javax.inject.Inject
 class ArticleViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
+
+    private val currentLanguage: String = "pt"
 
     private val _article = MutableStateFlow(emptyList<Article>())
     val article: StateFlow<List<Article>> = _article.asStateFlow()
@@ -55,5 +60,47 @@ class ArticleViewModel @Inject constructor(
             repository.deleteArticle(article)
             getArticlesData()
         }
+    }
+
+    fun processTranslation(targetLanguage: String) {
+        article.value.forEach(
+            action = {
+                it.title = translateText(it.title, targetLanguage)
+                it.description = translateText(it.description, targetLanguage)
+            }
+        )
+    }
+
+    private fun translateText(
+        text: String,
+        targetLanguage: String,
+    ): String {
+        var processedText = ""
+        val options = TranslatorOptions.Builder()
+            .setSourceLanguage(currentLanguage)
+            .setTargetLanguage(targetLanguage)
+            .build()
+
+        val translator = Translation.getClient(options)
+
+        val conditions = DownloadConditions.Builder()
+            .requireWifi()
+            .build()
+
+        translator.downloadModelIfNeeded(conditions)
+            .addOnSuccessListener {
+                translator.translate(text)
+                    .addOnSuccessListener { translatedText ->
+                        processedText = translatedText
+                    }
+                    .addOnFailureListener { exception ->
+
+                    }
+            }
+            .addOnFailureListener { exception ->
+
+            }
+
+        return processedText
     }
 }

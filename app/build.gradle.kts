@@ -53,6 +53,9 @@ android {
 }
 
 dependencies {
+    //MLKit Translator
+    implementation(libs.translate)
+
     //Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)

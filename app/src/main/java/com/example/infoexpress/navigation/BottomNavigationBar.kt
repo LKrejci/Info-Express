@@ -8,17 +8,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -39,12 +35,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -55,6 +50,7 @@ import com.example.infoexpress.ui.Screens
 import com.example.infoexpress.ui.homeScreen.HomeScreen
 import com.example.infoexpress.ui.savedNewsScreen.SavedNewsScreen
 import com.example.infoexpress.ui.searchNewsScreen.SearchNewsScreen
+import com.example.infoexpress.viewModel.ArticleViewModel
 
 @Composable
 fun BottomNavigationBar() {
@@ -120,6 +116,8 @@ fun BottomNavigationBar() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar() {
+    val articleViewModel: ArticleViewModel = hiltViewModel()
+
     var openDialog by remember {
         mutableStateOf(false)
     }
@@ -133,6 +131,8 @@ fun TopBar() {
     }
 
     val languages = listOf("pt", "en", "es", "fr", "it")
+
+    var languageSelected = ""
 
     TopAppBar(
         title = { Text(text = stringResource(R.string.app_name), fontSize = 18.sp) },
@@ -186,6 +186,7 @@ fun TopBar() {
                                                 onClick = {
                                                     isDropDownExpanded.value = false
                                                     itemPosition.intValue = index
+                                                    languageSelected = languages[index]
                                                 })
                                         }
                                     }
@@ -202,7 +203,9 @@ fun TopBar() {
                                         Text(text = "Cancel")
                                     }
                                     Button(
-                                        onClick = { openDialog = false },
+                                        onClick = {
+                                            articleViewModel.processTranslation(languageSelected)
+                                            openDialog = false },
                                         modifier = Modifier.padding(8.dp)
                                     ) {
                                         Text(text = "Confirm")
